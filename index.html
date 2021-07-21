@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Task 02</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <header>SPACE WAR</header>
+        <canvas id="canvas" ></canvas>
+    </body>
+    <script>
+        var aliens=[],gun=[];
+var frame=0;
+
+var w = window.innerWidth
+|| document.documentElement.clientWidth
+|| document.body.clientWidth;
+
+var h = window.innerHeight
+|| document.documentElement.clientHeight
+|| document.body.clientHeight; 
+
+var canvas = document.getElementById("canvas");
+if(w>600){
+    canvas.width=w-100;
+    canvas.height=h-200;
+}
+else{
+    canvas.width=w;
+    canvas.height=h;
+}
+var ctx = canvas.getContext("2d");
+
+var spaceship={
+    x:400,
+    y:400,
+    s:50,
+    draw: function(){
+        ctx.fillStyle="blue";
+        ctx.fillRect(this.x,this.y,this.s,this.s);
+    }
+}
+function alien(y){
+    this.y=y;
+    this.x=1700;
+    this.attack=function(){
+        ctx.fillStyle="red";
+        ctx.fillRect(this.x,y,20,20);
+    }
+}
+
+function bullet(x,y){
+    this.x=x;
+    this.y=y;
+    this.fire=function(){
+        ctx.fillStyle="purple";
+        ctx.fillRect(x,y,20,10);
+        // console.log('fire');
+    }
+}
+// var bullet={
+//     fire: function(x,y){
+//         ctx.fillStyle="purple";
+//         ctx.fillRect(x,y,20,10);
+//         console.log('fire');
+//     }
+// }
+function gameOver(enemy){
+    if((spaceship.x+50=== enemy.x) && (Math.abs(spaceship.y-enemy.y))<=20){
+        // console.log(spaceship.x,enemy.x);
+        // console.log(spaceship.y,enemy.y);
+        alert('KHELA FINISH');
+    }
+}
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height)
+    spaceship.draw();
+    frame++;
+
+        if(frame==1 || (frame/150) % 1 == 0){
+            var yPos=Math.random()*800;
+            console.log(yPos);
+            aliens.push(new alien(yPos));
+        }
+    
+    console.log('array length',aliens.length);
+    for (i = 0; i < aliens.length; i += 1) {
+        aliens[i].x += -2.5;
+        aliens[i].attack(); 
+    }
+
+    for (i = 0; i < aliens.length; i += 1) {
+        if (gameOver(aliens[i])) {
+            alert("KHELA KHATAM");
+        }
+      }
+    document.addEventListener('keyup',function(e){
+        if(e.code=='Space'){
+            console.log('space');
+            //console.log("coordinates",spaceship.x,spaceship.y);
+            gun.push(new bullet(spaceship.x+50,spaceship.y));
+        }
+        for (i = 0; i < gun.length; i += 1){
+            gun[i].x += 2.5;
+            gun[i].fire();
+        }        
+    });
+    requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+document.addEventListener('keydown',function(e){
+    if(e.code==='ArrowRight'){
+        spaceship.x += 5;
+    }
+    if(e.code==='ArrowLeft'){
+        spaceship.x += -5;
+    }
+    if(e.code==='ArrowUp'){
+        spaceship.y += -5;
+    }
+    if(e.code==='ArrowDown'){
+        spaceship.y += 5;
+    }
+});
+    </script>
+</html>
